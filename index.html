@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>ふたりプラン | 佐賀・福岡のデート選択肢ガチャ＆めくるカードアプリ</title>
+  <meta name="description" content="佐賀県・福岡県のデートで何するか迷ったときに、カードをめくって新しいデートの選択肢を見つけられるWebアプリ。キープ機能やLINE相談テキスト生成付き。">
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#fdf6f3',
+              100: '#faece6',
+              200: '#f4d8cc',
+              300: '#ebbda8',
+              400: '#e0987e',
+              500: '#e06d53',
+              600: '#cb593f',
+              700: '#aa462f',
+              800: '#893b29',
+              900: '#713426',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Lucide Icons CDN -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="./css/style.css">
+</head>
+<body class="min-h-screen flex flex-col justify-between select-none">
+
+  <!-- ==================== HEADER ==================== -->
+  <header class="header-glass sticky top-0 z-40 px-4 py-3 sm:px-6">
+    <div class="max-w-4xl mx-auto flex items-center justify-between">
+      <!-- ロゴ・タイトル -->
+      <div class="flex items-center gap-2.5">
+        <div class="w-9 h-9 rounded-2xl bg-gradient-to-tr from-orange-500 to-amber-500 flex items-center justify-center text-white shadow-md shadow-orange-500/20">
+          <i data-lucide="sparkles" class="w-5 h-5"></i>
+        </div>
+        <div>
+          <h1 class="text-base sm:text-lg font-extrabold text-stone-800 tracking-tight leading-tight flex items-center gap-1.5">
+            ふたりプラン
+            <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-orange-100 text-orange-700 tracking-wider">佐賀・福岡</span>
+          </h1>
+          <p class="text-[10px] text-stone-500">カードをめくってデートの行き先を見つけよう</p>
+        </div>
+      </div>
+
+      <!-- ヘッダー右側アクション -->
+      <div class="flex items-center gap-2">
+        <!-- カスタムプラン追加ボタン -->
+        <button id="btn-open-add" class="flex items-center gap-1 text-xs font-bold px-3 py-2 rounded-full bg-white border border-stone-200 text-stone-700 hover:border-orange-400 hover:text-orange-600 transition shadow-sm" title="新しいプランを自分で登録">
+          <i data-lucide="plus-circle" class="w-4 h-4 text-orange-500"></i>
+          <span class="hidden sm:inline">プラン追加</span>
+        </button>
+
+        <!-- キープ一覧ボタン -->
+        <button id="btn-open-kept" class="relative flex items-center gap-1.5 text-xs font-bold px-3.5 py-2 rounded-full bg-orange-50 border border-orange-200 text-orange-600 hover:bg-orange-100 transition shadow-sm">
+          <i data-lucide="heart" class="w-4 h-4 fill-orange-500 text-orange-500"></i>
+          <span>キープ</span>
+          <span id="kept-badge" class="hidden absolute -top-1.5 -right-1.5 bg-rose-500 text-white text-[10px] font-extrabold w-5 h-5 rounded-full flex items-center justify-center shadow-md animate-bounce">
+            0
+          </span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ==================== MAIN CONTENT ==================== -->
+  <main class="flex-grow flex flex-col justify-between max-w-4xl w-full mx-auto px-4 py-2 sm:py-4">
+
+    <!-- フィルターセクション -->
+    <div class="w-full mb-3 space-y-2.5">
+      <!-- 都道府県タブ ＆ キーワード検索 -->
+      <div class="flex items-center justify-between gap-2">
+        <!-- エリア切り替え -->
+        <div class="inline-flex p-1 bg-stone-200/80 rounded-full text-xs font-bold">
+          <button class="filter-pref-btn px-3 py-1.5 rounded-full transition active" data-pref="all">すべて</button>
+          <button class="filter-pref-btn px-3 py-1.5 rounded-full transition" data-pref="福岡県">福岡県</button>
+          <button class="filter-pref-btn px-3 py-1.5 rounded-full transition" data-pref="佐賀県">佐賀県</button>
+        </div>
+
+        <!-- 検索バー（コンパクト） -->
+        <div class="relative flex-grow max-w-[200px] sm:max-w-[240px]">
+          <i data-lucide="search" class="w-3.5 h-3.5 text-stone-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none"></i>
+          <input id="search-input" type="text" placeholder="キーワード・地名..." class="w-full pl-8 pr-3 py-1.5 text-xs bg-white border border-stone-200 rounded-full focus:outline-none focus:border-orange-400 focus:ring-1 focus:ring-orange-400 transition placeholder-stone-400 text-stone-700">
+        </div>
+      </div>
+
+      <!-- 気分・テーマタグ（横スクロールピル） -->
+      <div class="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar">
+        <button class="filter-tag-pill" data-tag="まったり">☕ まったり</button>
+        <button class="filter-tag-pill" data-tag="絶景・映え">📸 絶景・映え</button>
+        <button class="filter-tag-pill" data-tag="グルメ・カフェ">🍽️ グルメ・カフェ</button>
+        <button class="filter-tag-pill" data-tag="ドライブ">🚗 ドライブ</button>
+        <button class="filter-tag-pill" data-tag="温泉・癒やし">♨️ 温泉・癒やし</button>
+        <button class="filter-tag-pill" data-tag="アート・文化">🎨 アート・文化</button>
+        <button class="filter-tag-pill" data-tag="雨天OK">☔ 雨天OK</button>
+        <button class="filter-tag-pill" data-tag="夜景・ディナー">✨ 夜景・ディナー</button>
+      </div>
+    </div>
+
+    <!-- カルーセル・ステージ（カードめくり） -->
+    <div class="relative flex-grow flex flex-col justify-center items-center my-auto">
+      
+      <!-- ステージコンテナ -->
+      <div id="carousel-stage" class="carousel-stage">
+        <!-- JavaScriptで動的生成 -->
+      </div>
+
+      <!-- 左右ナビゲーションボタン（PC/タブレット用） -->
+      <button id="btn-prev" class="carousel-nav-btn absolute left-2 sm:-left-3 top-1/2 -translate-y-1/2" title="前のカードへ">
+        <i data-lucide="chevron-left" class="w-6 h-6"></i>
+      </button>
+      <button id="btn-next" class="carousel-nav-btn absolute right-2 sm:-right-3 top-1/2 -translate-y-1/2" title="次のカードへ">
+        <i data-lucide="chevron-right" class="w-6 h-6"></i>
+      </button>
+
+    </div>
+
+    <!-- ボトム操作バー（カウンター ＆ ガチャ） -->
+    <div class="w-full pt-3 pb-2 flex items-center justify-between max-w-md mx-auto">
+      <!-- カード番号カウンター -->
+      <div class="flex items-center gap-1.5 text-xs font-bold text-stone-500 bg-stone-100/90 px-3 py-1.5 rounded-full border border-stone-200">
+        <i data-lucide="layers" class="w-3.5 h-3.5 text-stone-400"></i>
+        <span id="card-counter">1 / 60</span>
+      </div>
+
+      <!-- ガチャ／シャッフルボタン -->
+      <button id="btn-gacha" class="flex items-center gap-2 px-5 py-2.5 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 text-white font-extrabold text-xs shadow-lg shadow-orange-500/25 hover:from-amber-600 hover:to-orange-600 active:scale-95 transition transform" title="条件内でランダムにカードを引く">
+        <i data-lucide="dices" class="w-4 h-4"></i>
+        <span>迷ったらコレ！おまかせガチャ</span>
+      </button>
+    </div>
+
+  </main>
+
+  <!-- ==================== FOOTER ==================== -->
+  <footer class="text-center py-2 text-[11px] text-stone-400">
+    <p>ふたりプラン — 佐賀・福岡 厳選デートスポット全60選</p>
+  </footer>
+
+  <!-- ==================== MODAL: キープ一覧 ==================== -->
+  <div id="modal-kept" class="modal-overlay">
+    <div class="modal-content">
+      <div class="flex items-center justify-between pb-3 mb-3 border-b border-stone-200">
+        <div class="flex items-center gap-2">
+          <i data-lucide="heart" class="w-5 h-5 text-rose-500 fill-rose-500"></i>
+          <h3 class="font-extrabold text-base text-stone-800">キープしたプラン一覧</h3>
+        </div>
+        <button id="btn-close-kept" class="p-1.5 text-stone-400 hover:text-stone-700 rounded-full hover:bg-stone-100">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <!-- キープしたリスト -->
+      <div id="kept-list-container" class="space-y-2.5 overflow-y-auto max-h-[60vh] pr-1">
+        <!-- JSで動的挿入 -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== MODAL: カスタムプラン追加 ==================== -->
+  <div id="modal-add" class="modal-overlay">
+    <div class="modal-content max-w-lg">
+      <div class="flex items-center justify-between pb-3 mb-3 border-b border-stone-200">
+        <div class="flex items-center gap-2">
+          <i data-lucide="pen-tool" class="w-5 h-5 text-orange-500"></i>
+          <h3 class="font-extrabold text-base text-stone-800">オリジナルのデートプランを追加</h3>
+        </div>
+        <button id="btn-close-add" class="p-1.5 text-stone-400 hover:text-stone-700 rounded-full hover:bg-stone-100">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <form id="form-add-spot" class="space-y-3 overflow-y-auto max-h-[65vh] pr-1 text-xs">
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block font-bold text-stone-700 mb-1">都道府県</label>
+            <select name="pref" class="w-full p-2 bg-stone-50 border border-stone-200 rounded-xl focus:outline-none focus:border-orange-500">
+              <option value="福岡県">福岡県</option>
+              <option value="佐賀県">佐賀県</option>
+            </select>
+          </div>
+          <div>
+            <label class="block font-bold text-stone-700 mb-1">詳細エリア</label>
+            <input type="text" name="area" placeholder="例: 糸島、武雄、天神など" required class="w-full p-2 bg-stone-50 border border-stone-200 rounded-xl focus:outline-none focus:border-orange-500">
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-bold text-stone-700 mb-1">キャッチコピー・タイトル</label>
+          <input type="text" name="title" placeholder="例: 海を眺めながら絶品ピザ＆サンセットドライブ" required class="w-full p-2 bg-stone-50 border border-stone-200 rounded-xl focus:outline-none focus:border-orange-500">
+        </div>
+
+        <div>
+          <label class="block font-bold text-stone-700 mb-1">具体的なスポット名</label>
+          <input type="text" name="spotName" placeholder="例: ○○カフェ＆リゾート" required class="w-full p-2 bg-stone-50 border border-stone-200 rounded-xl focus:outline-none focus:border-orange-500">
+        </div>
+
+        <div>
+          <label class="block font-bold text-stone-700 mb-1">何をするか・楽しみ方</label>
+          <textarea name="action" rows="2" placeholder="例: テラス席で海風を感じながらランチして、浜辺を手をつないで散歩する。" required class="w-full p-2 bg-stone-50 border border-stone-200 rounded-xl focus:outline-none focus:border-orange-500"></textarea>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2">
+          <div>
+            <label class="block font-bold text-stone-700 mb-1">予算目安</label>
+            <input type="text" name="budget" placeholder="例: ¥1,500〜¥3,000" class="w-full p-2 bg-stone-50 border border-stone-200 rounded-xl focus:outline-none focus:border-orange-500">
+          </div>
+          <div>
+            <label class="block font-bold text-stone-700 mb-1">所要時間</label>
+            <input type="text" name="time" placeholder="例: 2〜3時間" class="w-full p-2 bg-stone-50 border border-stone-200 rounded-xl focus:outline-none focus:border-orange-500">
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-bold text-stone-700 mb-1">写真画像URL (任意)</label>
+          <input type="url" name="imageUrl" placeholder="https://images.unsplash.com/..." class="w-full p-2 bg-stone-50 border border-stone-200 rounded-xl focus:outline-none focus:border-orange-500">
+        </div>
+
+        <div>
+          <label class="block font-bold text-stone-700 mb-1">気分・タグ</label>
+          <div class="flex flex-wrap gap-2 text-stone-600">
+            <label class="flex items-center gap-1 cursor-pointer"><input type="checkbox" name="tags" value="まったり"> まったり</label>
+            <label class="flex items-center gap-1 cursor-pointer"><input type="checkbox" name="tags" value="絶景・映え"> 絶景・映え</label>
+            <label class="flex items-center gap-1 cursor-pointer"><input type="checkbox" name="tags" value="グルメ・カフェ"> グルメ</label>
+            <label class="flex items-center gap-1 cursor-pointer"><input type="checkbox" name="tags" value="ドライブ"> ドライブ</label>
+            <label class="flex items-center gap-1 cursor-pointer"><input type="checkbox" name="tags" value="温泉・癒やし"> 温泉</label>
+            <label class="flex items-center gap-1 cursor-pointer"><input type="checkbox" name="tags" value="アート・文化"> アート</label>
+            <label class="flex items-center gap-1 cursor-pointer"><input type="checkbox" name="tags" value="夜景・ディナー"> 夜景</label>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2 pt-1">
+          <input type="checkbox" id="add-rain-ok" name="rainOk" class="w-4 h-4 text-orange-500 rounded">
+          <label for="add-rain-ok" class="font-bold text-stone-700 cursor-pointer">雨天でも楽しめるスポット</label>
+        </div>
+
+        <button type="submit" class="w-full py-2.5 bg-orange-600 hover:bg-orange-700 text-white font-extrabold text-sm rounded-xl shadow-md transition">
+          このデートプランを登録する
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==================== TOAST NOTIFICATION ==================== -->
+  <div id="toast-msg" class="toast-msg"></div>
+
+  <!-- ==================== SCRIPTS ==================== -->
+  <script type="module" src="./js/app.js"></script>
+</body>
+</html>
