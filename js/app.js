@@ -527,9 +527,8 @@ function setupEventListeners() {
   // フィルターボタン（エリア）
   document.querySelectorAll('.filter-pref-btn').forEach(btn => {
     btn.addEventListener('click', () => {
-      document.querySelectorAll('.filter-pref-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
       currentPref = btn.dataset.pref;
+      updateFilterButtonsUI();
       applyFilters();
     });
   });
@@ -537,14 +536,15 @@ function setupEventListeners() {
   // フィルターピル（タグ）
   document.querySelectorAll('.filter-tag-pill').forEach(pill => {
     pill.addEventListener('click', () => {
-      if (currentTag === pill.dataset.tag) {
+      const tag = pill.dataset.tag;
+      if (tag === 'all') {
         currentTag = 'all';
-        pill.classList.remove('active');
+      } else if (currentTag === tag) {
+        currentTag = 'all';
       } else {
-        document.querySelectorAll('.filter-tag-pill').forEach(p => p.classList.remove('active'));
-        pill.classList.add('active');
-        currentTag = pill.dataset.tag;
+        currentTag = tag;
       }
+      updateFilterButtonsUI();
       applyFilters();
     });
   });

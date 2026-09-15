@@ -84,10 +84,10 @@
       <!-- 都道府県タブ ＆ キーワード検索 -->
       <div class="flex items-center justify-between gap-2">
         <!-- エリア切り替え -->
-        <div class="inline-flex p-1 bg-stone-200/80 rounded-full text-xs font-bold">
-          <button class="filter-pref-btn px-3 py-1.5 rounded-full transition active" data-pref="all">すべて</button>
-          <button class="filter-pref-btn px-3 py-1.5 rounded-full transition" data-pref="福岡県">福岡県</button>
-          <button class="filter-pref-btn px-3 py-1.5 rounded-full transition" data-pref="佐賀県">佐賀県</button>
+        <div class="pref-selector-group">
+          <button class="filter-pref-btn active" data-pref="all">すべて</button>
+          <button class="filter-pref-btn" data-pref="福岡県">福岡県</button>
+          <button class="filter-pref-btn" data-pref="佐賀県">佐賀県</button>
         </div>
 
         <!-- 検索バー（コンパクト） -->
@@ -98,7 +98,8 @@
       </div>
 
       <!-- 気分・テーマタグ（横スクロールピル） -->
-      <div class="flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar">
+      <div class="flex items-center gap-2 overflow-x-auto pb-2 pt-1 no-scrollbar px-0.5">
+        <button class="filter-tag-pill active" data-tag="all">✨ すべて</button>
         <button class="filter-tag-pill" data-tag="まったり">☕ まったり</button>
         <button class="filter-tag-pill" data-tag="絶景・映え">📸 絶景・映え</button>
         <button class="filter-tag-pill" data-tag="グルメ・カフェ">🍽️ グルメ・カフェ</button>

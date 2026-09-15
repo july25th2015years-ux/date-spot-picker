@@ -402,30 +402,84 @@ h1, h2, h3, .font-rounded {
   box-shadow: var(--shadow-lg);
 }
 
-/* フィルターピル */
-.filter-pill {
+/* 都道府県切り替えボタングループ */
+.pref-selector-group {
+  background: #ede3da;
+  padding: 3px;
+  border-radius: var(--radius-full);
+  display: inline-flex;
+  gap: 3px;
+  box-shadow: inset 0 1px 3px rgba(92, 64, 51, 0.08);
+}
+
+.filter-pref-btn {
   padding: 6px 14px;
-  border-radius: 999px;
-  font-size: 0.82rem;
+  border-radius: var(--radius-full);
+  font-size: 0.78rem;
   font-weight: 600;
-  background: #fff;
-  color: var(--color-text-muted);
-  border: 1px solid #e7dcce;
+  color: #6b5e55;
+  background: transparent;
+  border: none;
   cursor: pointer;
   transition: var(--transition-smooth);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   white-space: nowrap;
 }
 
-.filter-pill:hover {
-  border-color: var(--color-primary);
+.filter-pref-btn:hover {
   color: var(--color-primary);
+  background: rgba(255, 255, 255, 0.5);
 }
 
+/* 都道府県 選択中（色つきで際立たせる） */
+.filter-pref-btn.active {
+  background: linear-gradient(135deg, #e06d53 0%, #cb593f 100%) !important;
+  color: #ffffff !important;
+  font-weight: 700 !important;
+  box-shadow: 0 3px 10px rgba(224, 109, 83, 0.38) !important;
+  transform: scale(1.02);
+}
+
+/* 気分・テーマタグ ピルボタン */
+.filter-tag-pill,
+.filter-pill {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 5px !important;
+  padding: 6px 13px !important;
+  border-radius: var(--radius-full) !important;
+  font-size: 0.8rem !important;
+  font-weight: 600 !important;
+  background: #ffffff !important;
+  color: #554942 !important;
+  border: 1.5px solid #ebdcd1 !important;
+  cursor: pointer !important;
+  transition: var(--transition-smooth) !important;
+  white-space: nowrap !important; /* テキストの縦折り返しを完全に防止 */
+  flex-shrink: 0 !important;
+  box-shadow: 0 2px 5px rgba(92, 64, 51, 0.05) !important;
+}
+
+.filter-tag-pill:hover,
+.filter-pill:hover {
+  border-color: #e06d53 !important;
+  color: #e06d53 !important;
+  background: #fffaf8 !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(92, 64, 51, 0.08) !important;
+}
+
+/* 気分・テーマタグ 選択中（色つきで際立たせる） */
+.filter-tag-pill.active,
 .filter-pill.active {
-  background: var(--color-primary);
-  color: #fff;
-  border-color: var(--color-primary);
-  box-shadow: 0 4px 10px rgba(224, 109, 83, 0.25);
+  background: linear-gradient(135deg, #e06d53 0%, #cf553a 100%) !important;
+  color: #ffffff !important;
+  border-color: #cb593f !important;
+  font-weight: 700 !important;
+  box-shadow: 0 4px 12px rgba(224, 109, 83, 0.42) !important;
+  transform: translateY(-1px) scale(1.03);
 }
 
 /* モーダル */
