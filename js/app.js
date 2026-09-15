@@ -1,4 +1,4 @@
-import { initialSpots } from '../data/spots.js';
+import { initialSpots } from '../data/spots.js?v=20260915b';
 
 // ==========================================
 // 状態管理
